@@ -1,20 +1,24 @@
-export interface BookingAttributes{
-  booking_id?:number;
-  customer_id?:number;
-  service_id?:number;
 
-  booking_date:string;
-  booking_time?:string;
+import type { BookingStatus } from "../constants/bookingStatus.js";
 
-booking_status?: "pending" | "confirmed" | "completed" | "cancelled";  billing_name:string;
-  billing_email:string;
-  billing_phone:string;
-  billing_address:string;
+export interface BookingAttributes {
+  booking_id?: number;
+  customer_id?: number;
+  service_id?: number;
 
-  total_amount:number;
+  booking_date: string;
+  booking_time?: string;
 
-  created_at?:Date;
-  updated_at?:Date;
-  deleted_at?:Date | null;
+  booking_status: BookingStatus;
+  billing_name: string;
+  billing_email: string;
+  billing_phone: string;
+  billing_address: string;
+
+  total_amount: number;
+
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date | null;
 
 }

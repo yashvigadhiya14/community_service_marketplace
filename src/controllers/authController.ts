@@ -6,26 +6,23 @@ import { sendEmail } from "../utils/emailService.js";
 import { generateAccessToken, generateRefreshToken } from "../core/JWT.js";
 
 export const register = async (req: any, res: any) => {
+
+  const { username, email, password, role, phone } = req.body;
+
+  const isStrongPassword = (password: string): boolean => {
+    return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(password);
+  };
+  if (!isStrongPassword(password)) {
+    return res.status(400).json({
+      message: "Password must contain uppercase, number & special character"
+    });
+  }
+
+  let user;
   try {
-    const { username, email, password, role,phone } = req.body;
-
-    if (!username || !email || !password || !role) {
-      return res.status(400).json({
-        message: "All fields are required"
-      });
-    }
-
-    const existingUser = await User.findOne({ where: { email } });
-
-    if (existingUser) {
-      return res.status(400).json({
-        message: "Email already registered"
-      });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    user = await User.create({
       username,
       email,
       password: hashedPassword,
@@ -34,14 +31,31 @@ export const register = async (req: any, res: any) => {
       is_verified: false
     });
 
-    const token = jwt.sign(
+
+  } catch (error: any) {
+
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({ message: "email already exists" });
+    }
+    return res.status(500).json({ message: "user creation failed" });
+  }
+
+  let token;
+  try {
+    token = jwt.sign(
       { id: user.user_id },
       process.env.JWT_SECRET as string,
       { expiresIn: "7d" }
     );
+  }
+  catch {
+    return res.status(500).json({ message: "Token generation failed" });
 
-    // const verifyLink = `http://localhost:3000/api/auth/verify-email?token=${token}`
-    const verifyLink = `http://localhost:5173/verify-email?token=${token}`;
+  }
+
+  try {
+    const verifyLink = `http://localhost:3000/api/auth/verify-email?token=${token}`
+    //const verifyLink = `http://localhost:5173/verify-email?token=${token}`;
 
     await sendEmail(
       email,
@@ -54,18 +68,18 @@ export const register = async (req: any, res: any) => {
       </a>
       `
     );
-
-    return res.status(201).json({
-      message: "User registered. Please verify your email"
-    });
-
-  } catch (error) {
-      console.error("Register error:", error);
-    return res.status(500).json({
-      message: "Internal server error"
-    });
   }
+
+  catch {
+    return res.status(500).json({ message: "Email sending failed" });
+  }
+
+  return res.status(201).json({
+    message: "User registered. Please verify your email"
+  });
+
 };
+
 
 export const verifyEmail = async (req: any, res: any) => {
   try {
@@ -108,52 +122,45 @@ export const verifyEmail = async (req: any, res: any) => {
 
 
 export const login = async (req: any, res: any) => {
+
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Email and password are required"
-      });
-    }
-
     const user = await User.findOne({ where: { email } });
-
-    if (!user) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
-        message: "Invalid email or password"
-      });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid email or password"
+        message: "invalid credentials"
       });
     }
 
     if (!user.is_verified) {
       return res.status(403).json({
-        message: "Please verify your email before logging in"
+        message: "Verify your email first"
       });
     }
+
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    user.refresh_token = hashedRefreshToken;
 
-    await user.save();
+    await User.update(
+      { refresh_token: hashedRefreshToken },
+      { where: { user_id: user.user_id } }
+    );
 
     return res.status(200).json({
-      message: "Login successful",
+      message: "login successfully",
       accessToken,
       refreshToken
     });
 
-  } catch (error) {
+  }
+
+
+
+  catch (error) {
     console.error("Login error:", error);
 
     return res.status(500).json({
@@ -162,14 +169,15 @@ export const login = async (req: any, res: any) => {
   }
 };
 
-export const logout = async (req:any,res:any)=>{
-  try{
+
+export const logout = async (req: any, res: any) => {
+  try {
 
     const user = await User.findByPk(req.user.id)
 
-    if(!user){
+    if (!user) {
       return res.status(404).json({
-        message:"user not found"
+        message: "user not found"
       })
     }
 
@@ -177,13 +185,13 @@ export const logout = async (req:any,res:any)=>{
     await user.save()
 
     res.json({
-      message:"logout successful"
+      message: "logout successful"
     })
 
   }
-  catch(error){
+  catch (error) {
     res.status(500).json({
-      message:"logout failed"
+      message: "logout failed"
     })
   }
 }
@@ -210,7 +218,7 @@ export const forgotPassword = async (req: any, res: any) => {
     await user.save();
     // const resetLink = `http://localhost:3000/api/auth/reset-password/${resetToken}`
 
-const resetLink = `http://192.168.1.107:5173/reset-password/${resetToken}`;
+    const resetLink = `http://192.168.1.107:5173/reset-password/${resetToken}`;
 
     await sendEmail(
       user.email,

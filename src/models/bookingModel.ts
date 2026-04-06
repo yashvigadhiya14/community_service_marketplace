@@ -3,7 +3,7 @@ import type { Optional } from "sequelize";
 import sequelize from "../config/db.js";
 import type { BookingAttributes } from "../interfaces/bookingInterface.js";
 import Service from "./serviceModel.js"
-
+import type { BookingStatus } from "../constants/bookingStatus.js";
 
 
 
@@ -11,12 +11,11 @@ interface BookingCreationAttributes
   extends Optional<
     BookingAttributes,
     "booking_id" | "booking_status" | "created_at" | "updated_at" | "deleted_at"
-  > {}
+  > { }
 
 class Booking
   extends Model<BookingAttributes, BookingCreationAttributes>
-  implements BookingAttributes
-{
+  implements BookingAttributes {
   public booking_id!: number;
   public service_id!: number;
   public customer_id!: number;
@@ -24,7 +23,7 @@ class Booking
   public booking_date!: string;
   public booking_time!: string;
 
-  public booking_status!:"pending" | "confirmed" | "completed" | "cancelled";
+  public booking_status!: "pending" | "confirmed" | "completed" | "cancelled";
 
   public billing_name!: string;
   public billing_email!: string;
@@ -66,10 +65,10 @@ Booking.init(
       allowNull: false,
     },
 
-     booking_status:{
-        type:DataTypes.ENUM("pending","confirmed","completed","cancelled"),
-        defaultValue:"pending",
-      },
+    booking_status: {
+      type: DataTypes.ENUM("pending", "confirmed", "completed", "cancelled"),
+      defaultValue: "pending",
+    },
 
     billing_name: {
       type: DataTypes.STRING(255),

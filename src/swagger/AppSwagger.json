@@ -10,10 +10,46 @@
       "url": "http://localhost:3000"
     }
   ],
-  "paths": 
-  {
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authentication APIs"
+    },
+    {
+      "name": "Category",
+      "description": "category APIs"
+    },
+    {
+      "name": "Availability",
+      "description": "Service availability management APIs"
+    },
+    {
+      "name": "Booking",
+      "description": "Booking management APIs"
+    },
+    {
+      "name": "Review",
+      "description": "Review and rating APIs"
+    },
+    {
+      "name": "Provider Dashboard",
+      "description": "Provider dashboard analytics APIs"
+    },
+    {
+      "name": "Admin Dashboard",
+      "description": "Admin analytics and dashboard APIs"
+    },
+    {
+      "name": "Services",
+      "description": "Service management APIs"
+    }
+  ],
+  "paths": {
     "/api/auth/register": {
       "post": {
+        "tags": [
+          "Auth"
+        ],
         "summary": "Register new user",
         "requestBody": {
           "required": true,
@@ -22,11 +58,21 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": { "type": "string" },
-                  "email": { "type": "string" },
-                  "password": { "type": "string" },
-                  "role": { "type": "string" },
-                  "phone": { "type": "string" }
+                  "username": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -39,9 +85,11 @@
         }
       }
     },
-
     "/api/auth/verify-email": {
       "get": {
+        "tags": [
+          "Auth"
+        ],
         "summary": "Verify user email",
         "parameters": [
           {
@@ -60,9 +108,11 @@
         }
       }
     },
-
     "/api/auth/login": {
       "post": {
+        "tags": [
+          "Auth"
+        ],
         "summary": "User login",
         "requestBody": {
           "required": true,
@@ -70,10 +120,17 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["email","password"],
+                "required": [
+                  "email",
+                  "password"
+                ],
                 "properties": {
-                  "email": { "type": "string" },
-                  "password": { "type": "string" }
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -86,99 +143,105 @@
         }
       }
     },
-   "/api/auth/forgot-password": 
-   {
+    "/api/auth/forgot-password": {
       "post": {
-    "summary": "Forgot Password",
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string"
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Forgot Password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset link sent"
           }
         }
       }
     },
-    "responses": {
-      "200": {
-        "description": "Reset link sent"
-      }
-    }
-  }
-},
-
-  "/api/auth/reset-password/{token}": {
-  "post": {
-    "summary": "Reset Password",
-    "parameters": [
-      {
-        "name": "token",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "newPassword": {
-                "type": "string"
+    "/api/auth/reset-password/{token}": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset Password",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newPassword": {
+                    "type": "string"
+                  }
+                }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successful"
           }
         }
       }
     },
-    "responses": {
-      "200": {
-        "description": "Password reset successful"
-      }
-    }
-  }
-},
-
-
-"/api/auth/resend-verification": {
-  "post": {
-    "summary": "Resend Verification Email",
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string"
+    "/api/auth/resend-verification": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Resend Verification Email",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification email sent"
           }
         }
       }
     },
-    "responses": {
-      "200": {
-        "description": "Verification email sent"
-      }
-    }
-  }
-},
-
-
     "/api/auth/logout": {
       "post": {
+        "tags": [
+          "Auth"
+        ],
         "summary": "Logout user",
         "security": [
           {
@@ -195,9 +258,11 @@
         }
       }
     },
-
     "/api/users/profile": {
       "get": {
+        "tags": [
+          "Auth"
+        ],
         "summary": "Get user profile",
         "security": [
           {
@@ -212,499 +277,536 @@
       }
     },
     "/api/categories": {
-  "get": {
-    "summary": "Get all active categories",
-    "responses": {
-      "200": {
-        "description": "List of categories",
-        "content": {
-          "application/json": {
-            "example": [
-              {
-                "service_category_id": 1,
-                "service_category_name": "Cleaning",
-                "description": "Home cleaning services",
-                "status": "active"
-              }
-            ]
-          }
-        }
-      }
-    }
-  },
-  "post": {
-    "summary": "Create new category (Admin only)",
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "required": ["service_category_name"],
-            "properties": {
-              "service_category_name": {
-                "type": "string",
-                "example": "Plumbing"
-              },
-              "description": {
-                "type": "string",
-                "example": "All plumbing related services"
-              },
-              "status": {
-                "type": "string",
-                "enum": ["active", "inactive"],
-                "example": "active"
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Get all active categories",
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "service_category_id": 1,
+                    "service_category_name": "Cleaning",
+                    "description": "Home cleaning services",
+                    "status": "active"
+                  }
+                ]
               }
             }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Create new category (Admin only)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "service_category_name"
+                ],
+                "properties": {
+                  "service_category_name": {
+                    "type": "string",
+                    "example": "Plumbing"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "All plumbing related services"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "inactive"
+                    ],
+                    "example": "active"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Category created successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin access required"
           }
         }
       }
     },
-    "responses": {
-      "201": {
-        "description": "Category created successfully"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "403": {
-        "description": "Admin access required"
-      }
-    }
-  }
-},
-
-"/api/categories/{id}": {
-  "get": {
-    "summary": "Get category by ID",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Category details",
-        "content": {
-          "application/json": {
-            "example": {
-              "service_category_id": 1,
-              "service_category_name": "Cleaning",
-              "description": "Home cleaning services",
-              "status": "active"
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Category not found"
-      }
-    }
-  },
-
-  "put": {
-    "summary": "Update category (Admin only)",
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "service_category_name": {
-                "type": "string",
-                "example": "Updated Cleaning"
-              },
-              "description": {
-                "type": "string",
-                "example": "Updated description"
-              },
-              "status": {
-                "type": "string",
-                "enum": ["active", "inactive"],
-                "example": "active"
-              }
-            }
-          }
-        }
-      }
-    },
-    "responses": {
-      "200": {
-        "description": "Category updated successfully"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "403": {
-        "description": "Admin access required"
-      },
-      "404": {
-        "description": "Category not found"
-      }
-    }
-  },
-
-  "delete": {
-    "summary": "Delete category (Soft delete, Admin only)",
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Category deleted successfully"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "403": {
-        "description": "Admin access required"
-      },
-      "404": {
-        "description": "Category not found"
-      }
-    }
-  }
-},
-
-  "/api/services": {
-    "post": {
-      "summary": "Create Service (Only Service Provider)",
-      "tags": ["Services"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
+    "/api/categories/{id}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Get category by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "title",
-                "service_description",
-                "category_id",
-                "price",
-                "location"
-              ],
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "Home Cleaning"
-                },
-                "service_description": {
-                  "type": "string",
-                  "example": "Full house cleaning service"
-                },
-                "category_id": {
-                  "type": "integer",
-                  "example": 1
-                },
-                "price": {
-                  "type": "number",
-                  "example": 500
-                },
-                "location": {
-                  "type": "string",
-                  "example": "Surat"
-                },
-                "availability": {
-                  "type": "string",
-                  "example": "Mon-Sat 9AM-6PM"
-                },
-                "city": {
-                  "type": "string",
-                  "example": "Surat"
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category details",
+            "content": {
+              "application/json": {
+                "example": {
+                  "service_category_id": 1,
+                  "service_category_name": "Cleaning",
+                  "description": "Home cleaning services",
+                  "status": "active"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Update category (Admin only)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "service_category_name": {
+                    "type": "string",
+                    "example": "Updated Cleaning"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Updated description"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "inactive"
+                    ],
+                    "example": "active"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Category updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin access required"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Delete category (Soft delete, Admin only)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin access required"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      }
+    },
+    "/api/services": {
+      "post": {
+        "summary": "Create Service (Only Service Provider)",
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "service_description",
+                  "category_id",
+                  "price",
+                  "location"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Home Cleaning"
+                  },
+                  "service_description": {
+                    "type": "string",
+                    "example": "Full house cleaning service"
+                  },
+                  "category_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 500
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "Surat"
+                  },
+                  "availability": {
+                    "type": "string",
+                    "example": "Mon-Sat 9AM-6PM"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Surat"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "service created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "All required fields must be provided"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only provider allowed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "only service provider can create servce"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "failed to create service"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/services/{id}": {
+      "put": {
+        "summary": "Update Service (Only Service Provider)",
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "service_description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service updated successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Service updated successfully"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only provider allowed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "only service provider can update service"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "service not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "error updating service"
                 }
               }
             }
           }
         }
       },
-      "responses": {
-        "201": {
-          "description": "Service created successfully",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "service created successfully"
-              }
-            }
+      "delete": {
+        "summary": "Delete Service (Only Service Provider)",
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
           }
-        },
-        "400": {
-          "description": "Validation error",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "All required fields must be provided"
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Only provider allowed",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "only service provider can create servce"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Server error",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "failed to create service"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-
-  "/api/services/{id}": {
-    "put": {
-      "summary": "Update Service (Only Service Provider)",
-      "tags": ["Services"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "integer"
-          }
-        }
-      ],
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "title": { "type": "string" },
-                "service_description": { "type": "string" },
-                "price": { "type": "number" },
-                "location": { "type": "string" },
-                "city": { "type": "string" }
-              }
+              "type": "integer"
             }
           }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Service updated successfully",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "Service updated successfully"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service deleted successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Service deleted successfully"
+                }
               }
             }
-          }
-        },
-        "403": {
-          "description": "Only provider allowed",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "only service provider can update service"
+          },
+          "403": {
+            "description": "Only provider allowed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "only service provider can delete service"
+                }
               }
             }
-          }
-        },
-        "404": {
-          "description": "Service not found",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "service not found"
+          },
+          "404": {
+            "description": "Service not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "service not found"
+                }
               }
             }
-          }
-        },
-        "500": {
-          "description": "Server error",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "error updating service"
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "error deleting service"
+                }
               }
             }
           }
         }
       }
     },
-
-    "delete": {
-      "summary": "Delete Service (Only Service Provider)",
-      "tags": ["Services"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "integer"
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Service deleted successfully",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "Service deleted successfully"
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Only provider allowed",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "only service provider can delete service"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "Service not found",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "service not found"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Server error",
-          "content": {
-            "application/json": {
-              "example": {
-                "message": "error deleting service"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/api/services/allservices": {
-  "get": {
-    "summary": "Get all services with availability slots",
-    "tags": ["Services"],
-    "responses": {
-      "200": {
-        "description": "List of all services with availability",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "service_id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "Home Cleaning"
-                      },
-                      "service_description": {
-                        "type": "string",
-                        "example": "Full house cleaning service"
-                      },
-                      "price": {
-                        "type": "number",
-                        "example": 500
-                      },
-                      "location": {
-                        "type": "string",
-                        "example": "Surat"
-                      },
-                      "city": {
-                        "type": "string",
-                        "example": "Surat"
-                      },
-                      "availabilitySlots": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "availability_id": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "available_date": {
-                              "type": "string",
-                              "format": "date",
-                              "example": "2026-03-25"
+    "/api/services/allservices": {
+      "get": {
+        "summary": "Get all services with availability slots",
+        "tags": [
+          "Services"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all services with availability",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "service_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "example": "Home Cleaning"
+                          },
+                          "service_description": {
+                            "type": "string",
+                            "example": "Full house cleaning service"
+                          },
+                          "price": {
+                            "type": "number",
+                            "example": 500
+                          },
+                          "location": {
+                            "type": "string",
+                            "example": "Surat"
+                          },
+                          "city": {
+                            "type": "string",
+                            "example": "Surat"
+                          },
+                          "availabilitySlots": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "availability_id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "available_date": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "example": "2026-03-25"
+                                }
+                              }
                             }
                           }
                         }
@@ -714,56 +816,73 @@
                 }
               }
             }
-          }
-        }
-      },
-      "500": {
-        "description": "Server error",
-        "content": {
-          "application/json": {
-            "example": {
-              "success": false,
-              "message": "Error"
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Error"
+                }
+              }
             }
           }
         }
       }
-    }
-  }
-},
-  "/api/services/search": {
+    },
+    "/api/services/search": {
       "get": {
         "summary": "Search services by keyword",
-        "tags": ["Services"],
+        "tags": [
+          "Services"
+        ],
         "parameters": [
           {
             "name": "keyword",
             "in": "query",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Search results",
-            "content": { "application/json": { "schema": { "type": "object", "properties": { "success": { "type": "boolean" }, "data": { "type": "array" } } } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-
-
-
     "/api/services/filter": {
       "get": {
         "summary": "Filter services by category",
-        "tags": ["Services"],
+        "tags": [
+          "Services"
+        ],
         "parameters": [
           {
             "name": "category_id",
             "in": "query",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -771,26 +890,44 @@
             "description": "Filtered services",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": { "success": { "type": "boolean" }, "count": { "type": "integer" }, "data": { "type": "array" } } }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array"
+                    }
+                  }
+                }
               }
             }
           }
         }
       }
     },
-    
-
-
     "/api/services/sort": {
       "get": {
         "summary": "Sort services by price",
-        "tags": ["Services"],
+        "tags": [
+          "Services"
+        ],
         "parameters": [
           {
             "name": "order",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "enum": ["ASC", "DESC"] }
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
           }
         ],
         "responses": {
@@ -798,7 +935,20 @@
             "description": "Sorted services",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": { "success": { "type": "boolean" }, "count": { "type": "integer" }, "data": { "type": "array" } } }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array"
+                    }
+                  }
+                }
               }
             }
           }
@@ -806,67 +956,618 @@
       }
     },
     "/api/services/provider/services": {
-  "get": {
-    "summary": "Get all services of logged-in provider",
-    "tags": ["Services"],
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "List of provider services",
-        "content": {
-          "application/json": {
-            "example": {
-              "success": true,
-              "count": 2,
-              "data": [
-                {
-                  "service_id": 18,
-                  "title": "AC Repair Service",
-                  "service_description": "Fixing AC issues",
-                  "price": 3400,
-                  "location": "Varachha",
-                  "city": "Surat",
-                  "category": {
-                    "service_category_name": "🛠️ Home Repair"
-                  },
-                  "availabilitySlots": [
+      "get": {
+        "summary": "Get all services of logged-in provider",
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of provider services",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "count": 2,
+                  "data": [
                     {
-                      "availability_id": 16,
-                      "available_date": "2026-04-02"
+                      "service_id": 18,
+                      "title": "AC Repair Service",
+                      "service_description": "Fixing AC issues",
+                      "price": 3400,
+                      "location": "Varachha",
+                      "city": "Surat",
+                      "category": {
+                        "service_category_name": "🛠️ Home Repair"
+                      },
+                      "availabilitySlots": [
+                        {
+                          "availability_id": 16,
+                          "available_date": "2026-04-02"
+                        }
+                      ]
                     }
                   ]
                 }
-              ]
+              }
             }
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/availability/add-availability": {
+      "post": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Add availability slots for a service",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "service_id": 1,
+                "slots": [
+                  {
+                    "available_date": "2026-04-05",
+                    "start_time": "09:00:00",
+                    "end_time": "11:00:00"
+                  },
+                  {
+                    "available_date": "2026-04-06",
+                    "start_time": "12:00:00",
+                    "end_time": "14:00:00"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Availability added successfully"
+          },
+          "400": {
+            "description": "Invalid input / past date"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/availability/{service_id}": {
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Get availability by service ID",
+        "parameters": [
+          {
+            "name": "service_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Availability fetched successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "availability_id": 1,
+                      "service_id": 1,
+                      "available_date": "2026-04-05",
+                      "start_time": "09:00:00",
+                      "end_time": "11:00:00",
+                      "is_booked": false
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/bookings": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Create booking",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "service_id": 1,
+                "booking_date": "2026-04-05",
+                "booking_time": "10:00:00",
+                "billing_name": "John Doe",
+                "billing_email": "john@example.com",
+                "billing_phone": "9876543210",
+                "billing_address": "Surat, India",
+                "total_amount": 500
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking created successfully"
+          },
+          "400": {
+            "description": "Invalid input or slot not available"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/bookings/customer": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Get customer bookings",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer bookings fetched"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/bookings/provider": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Get provider bookings",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider bookings fetched"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/bookings/{booking_id}/status": {
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Update booking status",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "status": "confirmed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Booking status updated"
+          },
+          "400": {
+            "description": "Booking not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/bookings/{booking_id}/complete": {
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Complete booking",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking completed"
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/bookings/{booking_id}/cancel": {
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Cancel booking",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking cancelled"
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/review/add": {
+      "post": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Add review for a service",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "service_id": 1,
+                "rating": 5,
+                "review_text": "Excellent service!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Review added successfully"
+          },
+          "400": {
+            "description": "Validation error or duplicate review"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/review/provider/avg/{provider_id}": {
+      "get": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Get average rating of provider",
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Average rating fetched",
+            "content": {
+              "application/json": {
+                "example": {
+                  "provider_id": 10,
+                  "average_rating": "4.5",
+                  "total_reviews": 12
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/review/service/{service_id}": {
+      "get": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Get reviews for a service (with pagination)",
+        "parameters": [
+          {
+            "name": "service_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reviews fetched successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 10,
+                  "page": 1,
+                  "totalPages": 2,
+                  "data": [
+                    {
+                      "review_id": 1,
+                      "rating": 5,
+                      "review_text": "Great service",
+                      "created_at": "2026-04-03T10:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/review/{review_id}": {
+      "put": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Update a review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "rating": 4,
+                "review_text": "Updated review text"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review updated successfully"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       },
-      "403": {
-        "description": "Access denied"
-      },
-      "500": {
-        "description": "Server error"
+      "delete": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Delete a review (soft delete)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deleted successfully"
+          },
+          "400": {
+            "description": "Invalid review ID"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/provider/dashboard": {
+      "get": {
+        "tags": [
+          "Provider Dashboard"
+        ],
+        "summary": "Get provider dashboard data",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard data fetched successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalservices": 5,
+                  "totalbookings": 20,
+                  "completedBookings": 12,
+                  "upcomingbookings": 4,
+                  "totalEarnings": 15000
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/admindashboard/admindashboard": {
+      "get": {
+        "tags": [
+          "Admin Dashboard"
+        ],
+        "summary": "Get admin dashboard analytics",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin dashboard data fetched successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalusers": 50,
+                  "totalproviders": 10,
+                  "totalservices": 25,
+                  "totalbookings": 100,
+                  "completedServices": 60
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       }
     }
-  }
-}
-
-
-
-},
-
- 
-
-
-
-
-
-  
-
+  },
   "components": {
     "securitySchemes": {
       "bearerAuth": {

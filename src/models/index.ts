@@ -27,11 +27,11 @@ Service.hasMany(Booking, {
   as: "bookings",
 });
 
-Service.hasMany(Review,{foreignKey:"service_id"});
-Review.belongsTo(Service,{foreignKey:"service_id"});
+Service.hasMany(Review, { foreignKey: "service_id" });
+Review.belongsTo(Service, { foreignKey: "service_id" });
 
-User.hasMany(Review,{foreignKey:"customer_id"});
-Review.belongsTo(User,{foreignKey:"customer_id"});
+User.hasMany(Review, { foreignKey: "customer_id" });
+Review.belongsTo(User, { foreignKey: "customer_id" });
 
 Service.belongsTo(User, {
   foreignKey: "provider_id",

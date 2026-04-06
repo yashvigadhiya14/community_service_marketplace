@@ -1,11 +1,11 @@
 import express from "express"
-import { verifyToken,authorizeRoles } from "../middleware/authMiddleware.js"
+import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js"
 
-const router=express.Router()
+const router = express.Router()
 
-router.post("/create-service",verifyToken,authorizeRoles("provider"),(req,res)=>{
+router.post("/create-service", verifyToken, authorizeRoles("provider"), (req, res) => {
   res.json({
-    message:"service created"
+    message: "service created"
   })
 })
 
