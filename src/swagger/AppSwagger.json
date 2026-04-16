@@ -632,6 +632,13 @@
                   },
                   "city": {
                     "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "inactive"
+                    ]
                   }
                 }
               }
@@ -750,6 +757,28 @@
         "summary": "Get all services with availability slots",
         "tags": [
           "Services"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "required": false,
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            },
+            "required": false,
+            "description": "Number of records per page"
+          }
         ],
         "responses": {
           "200": {
@@ -960,6 +989,38 @@
         "summary": "Get all services of logged-in provider",
         "tags": [
           "Services"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "inactive"
+              ]
+            },
+            "required": false
+          }
         ],
         "security": [
           {
@@ -1545,24 +1606,251 @@
         ],
         "responses": {
           "200": {
-            "description": "Admin dashboard data fetched successfully",
+            "description": "Dashboard data",
             "content": {
               "application/json": {
                 "example": {
-                  "totalusers": 50,
-                  "totalproviders": 10,
-                  "totalservices": 25,
-                  "totalbookings": 100,
-                  "completedServices": 60
+                  "success": true,
+                  "data": {
+                    "totalusers": 50,
+                    "totalproviders": 10,
+                    "totalservices": 25,
+                    "totalbookings": 100,
+                    "completedservices": 60
+                  }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/admindashboard/users": {
+      "get": {
+        "tags": [
+          "Admin Dashboard"
+        ],
+        "summary": "Get all users",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "role",
+            "schema": {
+              "type": "string"
+            }
           },
-          "401": {
-            "description": "Unauthorized"
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            }
           },
-          "500": {
-            "description": "Server error"
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users list",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "total": 20,
+                  "data": [
+                    {
+                      "user_id": 1,
+                      "username": "john",
+                      "email": "john@gmail.com",
+                      "role": "customer",
+                      "status": "active"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admindashboard/users/{id}/status": {
+      "patch": {
+        "tags": [
+          "Admin Dashboard"
+        ],
+        "summary": "Block or unblock user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User status updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "message": "User status updated",
+                  "data": {
+                    "user_id": 1,
+                    "status": "blocked"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admindashboard/services": {
+      "get": {
+        "tags": [
+          "Admin Dashboard"
+        ],
+        "summary": "Get all services",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category_id",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "minPrice",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "maxPrice",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Services list",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "total": 10,
+                  "data": [
+                    {
+                      "service_id": 1,
+                      "title": "Cleaning",
+                      "price": 500
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admindashboard/bookings": {
+      "get": {
+        "tags": [
+          "Admin Dashboard"
+        ],
+        "summary": "Get all bookings",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookings list",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "total": 15,
+                  "data": [
+                    {
+                      "booking_id": 1,
+                      "booking_status": "completed"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
