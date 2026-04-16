@@ -63,7 +63,7 @@ Service.init({
   },
   status: {
     type: DataTypes.ENUM("active", "inactive"),
-    defaultValue: "active",
+    defaultValue: "inactive",
   },
 
 },

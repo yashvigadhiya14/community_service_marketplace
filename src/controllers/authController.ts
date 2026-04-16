@@ -211,6 +211,7 @@ export const forgotPassword = async (req: any, res: any) => {
     }
 
     const resetToken = crypto.randomBytes(32).toString("hex");
+    console.log("Reset Token:", resetToken);
 
     user.reset_password_token = resetToken;
     user.reset_password_expiry = new Date(Date.now() + 15 * 60 * 1000);
@@ -313,8 +314,7 @@ export const resendVerificationEmail = async (req: any, res: any) => {
       { expiresIn: "15m" }
     );
 
-    const verifyLink = `http://localhost:5173/verify-email?token=${token}`;
-
+    const verifyLink = `http://localhost:3000/api/auth/verify-email?token=${token}`;
     await sendEmail(user.email, "Verify Your Email", `
       <h2>Email Verification</h2>
       <a href="${verifyLink}">Verify Email</a>

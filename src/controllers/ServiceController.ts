@@ -51,7 +51,7 @@ export const createservice = async (req: any, res: Response) => {
     })
 
     return res.status(201).json({
-      message: "service craeted sucessfully",
+      message: "service created sucessfully",
       data: service,
     })
 
@@ -99,6 +99,7 @@ export const updateService = async (req: any, res: Response) => {
       price,
       location,
       city,
+      status
     } = req.body;
 
 
@@ -114,6 +115,12 @@ export const updateService = async (req: any, res: Response) => {
       }
     }
 
+    if (status && !["active", "inactive"].includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status value"
+      });
+    }
+
     await service.update({
       title: title ?? service.title,
       service_description: service_description ?? service.service_description,
@@ -121,6 +128,7 @@ export const updateService = async (req: any, res: Response) => {
       price: price ?? service.price,
       location: location ?? service.location,
       city: city ?? service.city,
+      status: status ?? service.status
     });
 
 
@@ -183,13 +191,9 @@ export const deleteService = async (req: any, res: Response, next: NextFunction)
 
 export const getServices = async (req: any, res: Response) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const offset = (page - 1) * limit;
+    const { page, limit, category_id, city, minPrice, maxPrice } = req.query;
 
-    const { category_id, city, minPrice, maxPrice } = req.query;
-
-    const whereClause: any = {};
+    const whereClause: any = { status: "active" };
 
     if (category_id) whereClause.category_id = Number(category_id);
     if (city) whereClause.city = city;
@@ -200,15 +204,39 @@ export const getServices = async (req: any, res: Response) => {
       };
     }
 
+    if (!page && !limit) {
+      const data = await Service.findAll({
+        where: whereClause,
+        attributes: ["service_id", "title", "price", "city"],
+        include: [
+          {
+            model: ServiceCategory,
+            as: "category",
+            attributes: ["service_category_name"],
+          },
+          {
+            model: User,
+            as: "provider",
+            attributes: ["user_id", "username"],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+      });
+
+      return res.json({
+        success: true,
+        total: data.length,
+        data,
+      });
+    }
+
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 10;
+    const offset = (pageNumber - 1) * limitNumber;
+
     const { count, rows } = await Service.findAndCountAll({
       where: whereClause,
-      attributes: [
-        "service_id",
-        "title",
-        "price",
-        "city",
-      ],
-
+      attributes: ["service_id", "title", "price", "city"],
       include: [
         {
           model: ServiceCategory,
@@ -221,21 +249,22 @@ export const getServices = async (req: any, res: Response) => {
           attributes: ["user_id", "username"],
         },
       ],
-
-      limit,
+      limit: limitNumber,
       offset,
       order: [["createdAt", "DESC"]],
     });
 
-    return res.status(200).json({
+    return res.json({
+      success: true,
       total: count,
-      page,
-      totalPages: Math.ceil(count / limit),
+      page: pageNumber,
+      totalPages: Math.ceil(count / limitNumber),
       data: rows,
     });
 
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json({
+      success: false,
       message: "Error fetching services",
     });
   }
@@ -320,9 +349,60 @@ export const sortservices = async (req: any, res: any) => {
 export const getProviderServices = async (req: any, res: Response) => {
   try {
     const provider_id = req.user.id;
+    const { page, limit, status } = req.query;
 
-    const services = await Service.findAll({
-      where: { provider_id },
+    const whereClause: any = { provider_id };
+
+    if (status) {
+      if (!["active", "inactive"].includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid status filter",
+        });
+      }
+      whereClause.status = status;
+    }
+
+    if (!page && !limit) {
+      const data = await Service.findAll({
+        where: whereClause,
+        attributes: [
+          "service_id",
+          "title",
+          "service_description",
+          "price",
+          "location",
+          "city",
+          "status",
+        ],
+        include: [
+          {
+            model: ServiceCategory,
+            as: "category",
+            attributes: ["service_category_name"],
+          },
+          {
+            model: ServiceAvailability,
+            as: "availabilitySlots",
+            attributes: ["availability_id", "available_date"],
+          },
+        ],
+        order: [["service_id", "DESC"]],
+      });
+
+      return res.json({
+        success: true,
+        total: data.length,
+        data,
+      });
+    }
+
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 10;
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const { count, rows } = await Service.findAndCountAll({
+      where: whereClause,
       attributes: [
         "service_id",
         "title",
@@ -330,40 +410,37 @@ export const getProviderServices = async (req: any, res: Response) => {
         "price",
         "location",
         "city",
+        "status",
       ],
       include: [
         {
           model: ServiceCategory,
           as: "category",
           attributes: ["service_category_name"],
-          required: false,
         },
         {
           model: ServiceAvailability,
           as: "availabilitySlots",
           attributes: ["availability_id", "available_date"],
-          required: false,
         },
       ],
-      order: [["createdAt", "DESC"]],
+      limit: limitNumber,
+      offset,
+      order: [["service_id", "DESC"]],
     });
 
-    return res.status(200).json({
+    return res.json({
       success: true,
-      count: services.length,
-      data: services,
+      total: count,
+      page: pageNumber,
+      totalPages: Math.ceil(count / limitNumber),
+      data: rows,
     });
 
-  } catch (error: any) {
-    console.error("getProviderServices error:", error);
-
+  } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Error fetching provider services",
-      error: error.message,
     });
   }
 };
-
-
-
